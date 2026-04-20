@@ -6,22 +6,16 @@ on:
       - 'v*'
 
 jobs:
-  build:
+  patchnotes:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
+    outputs:
+      notes: ${{ steps.notes.outputs.NOTES }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
-
       - name: Get patchnotes
-        id: patchnotes
+        id: notes
         run: |
           PREV_TAG=$(git tag --sort=-version:refname | sed -n '2p')
           if [ -z "$PREV_TAG" ]; then
@@ -33,43 +27,73 @@ jobs:
           echo "$NOTES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Publish Windows
-        run: |
-          dotnet publish -r win-x64 -c Release --self-contained \
-            -p:PublishSingleFile=true -p:DebugType=none \
-            -o publish/win-x64
+  build:
+    needs: patchnotes
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            rid: win-x64
+            artifact: no-more-cats.exe
+            archive_cmd: Compress-Archive -Path publish/* -DestinationPath
+            archive_ext: zip
+          - os: macos-latest
+            rid: osx-arm64
+            artifact: no-more-cats
+            archive_cmd: tar -czf
+            archive_ext: tar.gz
+          - os: macos-13
+            rid: osx-x64
+            artifact: no-more-cats
+            archive_cmd: tar -czf
+            archive_ext: tar.gz
+          - os: ubuntu-latest
+            rid: linux-x64
+            artifact: no-more-cats
+            archive_cmd: tar -czf
+            archive_ext: tar.gz
 
-      - name: Publish macOS (Apple Silicon)
-        run: |
-          dotnet publish -r osx-arm64 -c Release --self-contained \
-            -p:PublishSingleFile=true -p:DebugType=none \
-            -o publish/osx-arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Publish macOS (Intel)
-        run: |
-          dotnet publish -r osx-x64 -c Release --self-contained \
-            -p:PublishSingleFile=true -p:DebugType=none \
-            -o publish/osx-x64
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
 
-      - name: Publish Linux
-        run: |
-          dotnet publish -r linux-x64 -c Release --self-contained \
-            -p:PublishSingleFile=true -p:DebugType=none \
-            -o publish/linux-x64
+      - name: Publish
+        run: dotnet publish -r ${{ matrix.rid }} -c Release --self-contained -p:PublishSingleFile=true -p:DebugType=none -o publish
 
-      - name: Package
+      - name: Package (Unix)
+        if: runner.os != 'Windows'
         run: |
           VERSION=${GITHUB_REF_NAME}
-          cd publish
-          zip -r ../no-more-cats-${VERSION}-win-x64.zip win-x64/
-          tar -czf ../no-more-cats-${VERSION}-osx-arm64.tar.gz osx-arm64/
-          tar -czf ../no-more-cats-${VERSION}-osx-x64.tar.gz osx-x64/
-          tar -czf ../no-more-cats-${VERSION}-linux-x64.tar.gz linux-x64/
+          tar -czf no-more-cats-${VERSION}-${{ matrix.rid }}.tar.gz -C publish .
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $VERSION = $env:GITHUB_REF_NAME
+          Compress-Archive -Path publish/* -DestinationPath "no-more-cats-${VERSION}-${{ matrix.rid }}.zip"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          body: ${{ steps.patchnotes.outputs.NOTES }}
-          files: |
-            no-more-cats-*.zip
-            no-more-cats-*.tar.gz
+          name: ${{ matrix.rid }}
+          path: no-more-cats-*.*
+
+  release:
+    needs: [patchnotes, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          body: ${{ needs.patchnotes.outputs.notes }}
+          files: no-more-cats-*.*
