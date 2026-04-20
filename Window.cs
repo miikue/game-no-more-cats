@@ -216,12 +216,12 @@ public class Window : GameWindow
             Vector3 rayDirection = camera.GetRayLine().direction;
             
             rayOrigin.Y -= 0.2f;
+            rayModelObject?.Delete();
             rayModelObject = Primitives.CreateRay(
                 rayOrigin,
-                rayOrigin + rayDirection * 10f, // Length of the ray
-                0.10f // Thickness of the ray
+                rayOrigin + rayDirection * 10f,
+                0.10f
             );
-            rayModelObject.Render(_rayProgram);
 
             for (int i = 0; i < modelObjects.Count; i++)
             {
