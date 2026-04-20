@@ -56,7 +56,7 @@ public class ModelObject
             throw new InvalidOperationException("Vertex count does not match texture coordinate count. (" + vertices.Count + " vs " + texCoords.Count + ")");
         }
         
-        shader.Bind();
+        shader.Use();
         vao.Bind();
         ibo.Bind();
         texture.Bind();
@@ -108,13 +108,5 @@ public class AABB
         
         
     }
-
-    public bool Intersects(AABB other)
-    {
-        return (Min.X <= other.Max.X && Max.X >= other.Min.X) &&
-               (Min.Y <= other.Max.Y && Max.Y >= other.Min.Y) &&
-               (Min.Z <= other.Max.Z && Max.Z >= other.Min.Z);
-    }
-    
 
 }

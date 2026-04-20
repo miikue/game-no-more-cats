@@ -15,7 +15,6 @@ public class Window : GameWindow
     public Chunk chunk;
     private Sky sky;
     private ModelObject rayModelObject;
-    private bool rayVisible;
 
     // Models in the world
     private List<ModelObject> modelObjects;
@@ -65,9 +64,7 @@ public class Window : GameWindow
         chunk = new Chunk(new Vector3(-40, 1, -40));
         sky = new Sky(new Vector3(0,-10,0), "skyTex.jpeg");
         
-        // Default models (enemies)
-        modelObjects.Add(Primitives.CreateBox(new Vector3(10, chunk.GetTerrainHeight(10,0)+3, 0), "textureCat.png"));
-        modelObjects.Add(Primitives.CreateEnemy( new Vector3(5, chunk.GetTerrainHeight(5,5)+3, 5), "textureCat.png", "grassTex.jpg"));
+        modelObjects.Add(Primitives.CreateEnemy(new Vector3(5, chunk.GetTerrainHeight(5, 5) + 3, 5), "textureCat.png", "grassTex.jpg"));
         
         _shaderProgram = new ShaderProgram("Default.vert", "Default.frag");
         _rayProgram = new ShaderProgram("Ray.vert", "Ray.frag");
@@ -222,7 +219,6 @@ public class Window : GameWindow
                 0.10f // Thickness of the ray
             );
             rayModelObject.Render(_rayProgram);
-            rayVisible = true;
 
             for (int i = 0; i < modelObjects.Count; i++)
             {

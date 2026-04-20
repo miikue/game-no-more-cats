@@ -141,7 +141,7 @@ public class Sky
 
     public void Render(ShaderProgram shaderProgram)
     {
-        shaderProgram.Bind();
+        shaderProgram.Use();
         chunkVAO.Bind();
         chunkIBO.Bind();
         chunkTexture.Bind();

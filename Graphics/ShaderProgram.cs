@@ -8,19 +8,11 @@ public class ShaderProgram
 {
     public int ID;
     
-    public void Bind()
-    {
-        GL.UseProgram(ID);
-    }
-    public void Unbind()
-    {
-        GL.UseProgram(0);
-    }
     public void Use()
     {
         GL.UseProgram(ID);
     }
-    
+
     public void Delete()
     {
         GL.DeleteProgram(ID);
@@ -96,11 +88,6 @@ public class ShaderProgram
             throw new Exception($"Uniform {name} not found!");
         }
         GL.Uniform2(location, vector);
-    }
-
-    public void Dispose()
-    {
-        GL.DeleteProgram(ID);
     }
 
     public void SetVector3(string name, Vector3 vector)

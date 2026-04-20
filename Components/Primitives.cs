@@ -1,40 +1,8 @@
-using OpenGLAsi.Components;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
 public static class Primitives
 {
-    
-    
-    public static ModelObject CreateCone(Vector3 position, int segments, float height, float radius, string texturePath)
-    {
-        List<Vector3> vertices = new();
-        List<Vector2> texCoords = new();
-        List<uint> indices = new();
-
-        vertices.Add(new Vector3(0, height, 0)); // vrchol kužele
-        texCoords.Add(new Vector2(0.5f, 1.0f));
-
-        for (int i = 0; i <= segments; i++)
-        {
-            float angle = (float)i / segments * MathF.PI * 2;
-            float x = MathF.Cos(angle) * radius;
-            float z = MathF.Sin(angle) * radius;
-
-            vertices.Add(new Vector3(x, 0, z));
-            texCoords.Add(new Vector2((float)i / segments, 0));
-
-            if (i < segments)
-            {
-                // trojúhelník: vrchol, aktuální bod, další bod
-                indices.Add(0);
-                indices.Add((uint)(i + 1));
-                indices.Add((uint)(i + 2));
-            }
-        }
-
-        return new ModelObject(vertices, texCoords, indices, texturePath, position);
-    }
     
     
     public static ModelObject CreateCylinder(Vector3 position, int segments, float height, float radius, string texturePath)

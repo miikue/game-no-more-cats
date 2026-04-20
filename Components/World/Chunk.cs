@@ -8,11 +8,11 @@ public class Chunk
 {
     private List<Vector3> chunkVertices;
     private List<Vector2> chunkTexCoords;
-    public List<uint> chunkIndices;
+    private List<uint> chunkIndices;
     private Vector3 position;
     private uint indexCount = 0;
 
-    public const int SIZE = 100; // Size of the chunk (16x16x16)
+    public const int SIZE = 100;
     const int HEIGHT = 32; // Height of the chunk
     
     VAO chunkVAO;
@@ -147,7 +147,7 @@ public class Chunk
     {
         
         
-        shaderProgram.Bind();
+        shaderProgram.Use();
         chunkVAO.Bind();
         chunkIBO.Bind();
         chunkTexture.Bind();
