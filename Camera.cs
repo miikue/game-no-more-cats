@@ -33,7 +33,7 @@ public class Camera
     private float verticalVelocity = 0f;
     private float gravity = -20f;
     private float jumpForce = 7f;
-    public Chunk chunk;
+    public Chunk chunk = null!;
 
     
     public Camera(float width, float height, Vector3 position)

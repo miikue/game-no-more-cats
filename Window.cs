@@ -11,22 +11,22 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 public class Window : GameWindow
 {
     // World
-    private Camera camera;
-    public Chunk chunk;
-    private Sky sky;
-    private ModelObject rayModelObject;
+    private Camera camera = null!;
+    public Chunk chunk = null!;
+    private Sky sky = null!;
+    private ModelObject rayModelObject = null!;
 
     // Models in the world
-    private List<ModelObject> modelObjects;
+    private List<ModelObject> modelObjects = null!;
     private int numberOfEnemies = 10;
     private int shootedEnemyIndex = -1; // Index of the last hit enemy, -1 if none hit
     private int numberOfShootedEnemies = 0;
     
     
     // Shader programs
-    private ShaderProgram _shaderProgram;
-    private ShaderProgram _rayProgram;
-    private ShaderProgram _crosshairShader;
+    private ShaderProgram _shaderProgram = null!;
+    private ShaderProgram _rayProgram = null!;
+    private ShaderProgram _crosshairShader = null!;
 
 
     // Rendering screen _width and height

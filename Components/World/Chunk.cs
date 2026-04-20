@@ -15,13 +15,13 @@ public class Chunk
     public const int SIZE = 100;
     const int HEIGHT = 32; // Height of the chunk
     
-    VAO chunkVAO;
-    VBO chunkVBO;
-    VBO chunkTexVBO;
-    IBO chunkIBO;
+    VAO chunkVAO = null!;
+    VBO chunkVBO = null!;
+    VBO chunkTexVBO = null!;
+    IBO chunkIBO = null!;
     
-    Texture chunkTexture;
-    float[,] heightMap;
+    Texture chunkTexture = null!;
+    float[,] heightMap = null!;
     
     public Chunk(Vector3 position)
     {

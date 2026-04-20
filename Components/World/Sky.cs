@@ -8,19 +8,17 @@ public class Sky
 {
     private List<Vector3> chunkVertices;
     private List<Vector2> chunkTexCoords;
-    public List<uint> chunkIndices;
+    private List<uint> chunkIndices = null!;
     private Vector3 position;
-    private uint indexCount = 0;
-
-    const int SIZE = 100;
+    private const int SIZE = 100;
     
-    VAO chunkVAO;
-    VBO chunkVBO;
-    VBO chunkTexVBO;
-    IBO chunkIBO;
+    VAO chunkVAO = null!;
+    VBO chunkVBO = null!;
+    VBO chunkTexVBO = null!;
+    IBO chunkIBO = null!;
     
-    Texture chunkTexture;
-    string texturePath;
+    Texture chunkTexture = null!;
+    private readonly string texturePath = null!;
     
     public Sky(Vector3 position, string texturePath)
     {

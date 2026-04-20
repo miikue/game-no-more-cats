@@ -127,7 +127,7 @@ public static class Primitives
         Vector3 direction = end - start;
         float length = direction.Length;
         
-        if (length < 0.001f) return null;
+        if (length < 0.001f) return null!;
 
         // Create base cylinder aligned with Y-axis
         ModelObject ray = CreateCylinder(
