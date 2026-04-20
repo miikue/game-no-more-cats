@@ -47,9 +47,9 @@ public class Window : GameWindow
     protected override void OnResize(ResizeEventArgs e)
     {
         base.OnResize(e);
-        GL.Viewport(0,0, e.Width,e.Height);
-        _height = e.Height;
-        _width = e.Width;
+        GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
+        _width = FramebufferSize.X;
+        _height = FramebufferSize.Y;
     }
 
     protected override void OnLoad()
@@ -75,6 +75,9 @@ public class Window : GameWindow
         this.VSync = VSyncMode.On;
         
         
+        _width = FramebufferSize.X;
+        _height = FramebufferSize.Y;
+        GL.Viewport(0, 0, _width, _height);
         camera = new Camera(_width, _height, Vector3.Zero);
         camera.chunk = chunk;
         
