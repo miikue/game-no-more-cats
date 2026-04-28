@@ -45,11 +45,6 @@ jobs:
             artifact: no-more-cats
             archive_cmd: tar -czf
             archive_ext: tar.gz
-          - os: macos-13
-            rid: osx-x64
-            artifact: no-more-cats
-            archive_cmd: tar -czf
-            archive_ext: tar.gz
           - os: ubuntu-latest
             rid: linux-x64
             artifact: no-more-cats
